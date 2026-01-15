@@ -3,11 +3,14 @@
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { usePathname } from 'next/navigation'
+import { useRouter } from "next/navigation";
 import React from 'react'
 
 const ExploreLayout = ({children}) => {
+    const router = useRouter();
     const pathname = usePathname();
     const isMainExplore = pathname === "/explore";
+    
     return (
     <div className="pb-15 min-h-screen">
         <div className="max-w-7xl mx-auto px-6">
