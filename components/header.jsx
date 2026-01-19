@@ -7,19 +7,25 @@ import Image from "next/image";
 import {
   SignInButton,
   UserButton,
+  useAuth,
 } from '@clerk/nextjs'
 import { Button } from "./ui/button";
 import { Authenticated, Unauthenticated } from "convex/react";
 import useStoreUser from "@/hooks/use-store-user";
-import { Building, Plus, Ticket } from "lucide-react";
+import { Building, Crown, Plus, Ticket } from "lucide-react";
 import { useOnboarding } from "@/hooks/use-onboarding";
 import OnboardingModal from "./onboarding-modal";
 import SearchLocationBar from "./search-location-bar";
+import { Badge } from "./ui/badge";
+import UpgradeModal from "./upgrade-modal";
 
 export default function Header() {
   const {isLoading} = useStoreUser();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const { showOnboarding, handleOnboardingComplete, handleOnboardingSkip } = useOnboarding();
+  
+  const { has } = useAuth();
+  const hasPro = has?.({plan: "pro"});
 
   return (
     <>
@@ -35,6 +41,12 @@ export default function Header() {
                 className="w-full h-11"
                 priority
               />
+              {hasPro && (
+                <Badge className="bg-linear-to-r from-pink-500 to-orange-500 gap-1">
+                  <Crown className="w-3 h-3" />
+                  Pro
+                </Badge>
+              )}
             </Link>
 
             {/* Search & Location desktop only */}
@@ -45,9 +57,12 @@ export default function Header() {
 
             {/* Right Side Actions */}
             <div className="flex items-center">
-              <Button variant="ghost" size="sm" onClick={()=>setShowUpgradeModal(true)}>
+              {!hasPro && (
+                <Button variant="ghost" size="sm" onClick={()=>setShowUpgradeModal(true)}>
                   Pricing
                 </Button>
+              )}
+
               <Button variant="ghost" size="sm" asChild className={"mr-2"}>
                 <Link href="/explore">Explore</Link>
               </Button>
@@ -104,6 +119,12 @@ export default function Header() {
           isOpen={showOnboarding}
           onClose={handleOnboardingSkip}
           onComplete={handleOnboardingComplete}
+        />
+
+        <UpgradeModal
+          isOpen={showUpgradeModal}
+          onClose={() => setShowUpgradeModal(false)}
+          trigger='header'
         />
     </>
   );
