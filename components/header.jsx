@@ -12,10 +12,13 @@ import { Button } from "./ui/button";
 import { Authenticated, Unauthenticated } from "convex/react";
 import useStoreUser from "@/hooks/use-store-user";
 import { Building, Plus, Ticket } from "lucide-react";
+import { useOnboarding } from "@/hooks/use-onboarding";
+import OnboardingModal from "./onboarding-modal";
 
 export default function Header() {
   const {isLoading} = useStoreUser();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const { showOnboarding, handleOnboardingComplete, handleOnboardingSkip } = useOnboarding();
 
   return (
     <>
@@ -83,6 +86,13 @@ export default function Header() {
             </div>
           )}
         </nav>
+
+        {/* Modals */}
+        <OnboardingModal 
+          isOpen={showOnboarding}
+          onClose={handleOnboardingSkip}
+          onComplete={handleOnboardingComplete}
+        />
     </>
   );
 }
