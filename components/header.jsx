@@ -14,6 +14,7 @@ import useStoreUser from "@/hooks/use-store-user";
 import { Building, Plus, Ticket } from "lucide-react";
 import { useOnboarding } from "@/hooks/use-onboarding";
 import OnboardingModal from "./onboarding-modal";
+import SearchLocationBar from "./search-location-bar";
 
 export default function Header() {
   const {isLoading} = useStoreUser();
@@ -36,9 +37,15 @@ export default function Header() {
               />
             </Link>
 
+            {/* Search & Location desktop only */}
+            <div className="hidden md:flex flex-1 justify-center">
+
+            </div>
+            <SearchLocationBar />
+
             {/* Right Side Actions */}
             <div className="flex items-center">
-            <Button variant="ghost" size="sm" onClick={()=>setShowUpgradeModal(true)}>
+              <Button variant="ghost" size="sm" onClick={()=>setShowUpgradeModal(true)}>
                   Pricing
                 </Button>
               <Button variant="ghost" size="sm" asChild className={"mr-2"}>
@@ -77,6 +84,11 @@ export default function Header() {
                 </SignInButton>
               </Unauthenticated>
             </div>
+          </div>
+
+          {/* mobile search & location */}
+          <div className="md:hidden border-t p-3">
+            <SearchLocationBar />
           </div>
 
           {/* Loader */}
