@@ -34,7 +34,6 @@ import {
 } from '@/components/ui/select';
 
 import UnsplashImagePicker from '@/components/unsplash-image-picker';
-import AIEventCreator from './_components/ai-event-creator';
 import UpgradeModal from '@/components/upgrade-modal';
 import { CATEGORIES } from '@/lib/data';
 import Image from 'next/image';
@@ -194,15 +193,6 @@ export default function CreateEventPage() {
     }
   };
 
-  const handleAIGenerate = (generatedData) => {
-    setValue('title', generatedData.title);
-    setValue('description', generatedData.description);
-    setValue('category', generatedData.category);
-    setValue('capacity', generatedData.suggestedCapacity);
-    setValue('ticketType', generatedData.suggestedTicketType);
-    toast.success('Event details filled! Customize as needed.');
-  };
-
   return (
     <div
       className="min-h-screen transition-colors duration-300 px-6 py-8 -mt-6 md:-mt-16 lg:-mt-5 lg:rounded-md"
@@ -218,7 +208,6 @@ export default function CreateEventPage() {
             </p>
           )}
         </div>
-        {/* <AIEventCreator onEventGenerated={handleAIGenerate} /> */}
       </div>
 
       <div className="max-w-6xl mx-auto grid md:grid-cols-[320px_1fr] gap-10">
