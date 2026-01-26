@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { notFound } from "next/navigation";
-import Image from "next/image";
-import { format } from "date-fns";
+import { useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { notFound } from 'next/navigation';
+import Image from 'next/image';
+import { format } from 'date-fns';
 import {
   ArrowLeft,
   Calendar,
@@ -19,28 +19,28 @@ import {
   Download,
   Search,
   Eye,
-} from "lucide-react";
-import { useConvexQuery, useConvexMutation } from "@/hooks/use-convex-query";
-import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { useConvexQuery, useConvexMutation } from '@/hooks/use-convex-query';
+import { api } from '@/convex/_generated/api';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import { getCategoryIcon, getCategoryLabel } from "@/lib/data";
-import QRScannerModal from "../_components/qr-scanner-modal";
-import { AttendeeCard } from "../_components/attendee-card";
+import { getCategoryIcon, getCategoryLabel } from '@/lib/data';
+import QRScannerModal from '../_components/qr-scanner-modal';
+import { AttendeeCard } from '../_components/attendee-card';
 
 export default function EventDashboardPage() {
   const params = useParams();
   const router = useRouter();
   const eventId = params.eventId;
 
-  const [activeTab, setActiveTab] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [showQRScanner, setShowQRScanner] = useState(false);
 
   // Fetch event dashboard data
@@ -48,7 +48,7 @@ export default function EventDashboardPage() {
     api.dashboard.getEventDashboard,
     { eventId }
   );
-//   console.log(dashboardData)
+  //   console.log(dashboardData)
 
   // Fetch registrations
   const { data: registrations, isLoading: loadingRegistrations } =
@@ -61,54 +61,54 @@ export default function EventDashboardPage() {
 
   const handleDelete = async () => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this event? This action cannot be undone and will permanently delete the event and all associated registrations."
+      'Are you sure you want to delete this event? This action cannot be undone and will permanently delete the event and all associated registrations.'
     );
 
     if (!confirmed) return;
 
     try {
       await deleteEvent({ eventId });
-      toast.success("Event deleted successfully");
-      router.push("/my-events");
+      toast.success('Event deleted successfully');
+      router.push('/my-events');
     } catch (error) {
-      toast.error(error.message || "Failed to delete event");
+      toast.error(error.message || 'Failed to delete event');
     }
   };
 
   const handleExportCSV = () => {
     if (!registrations || registrations.length === 0) {
-      toast.error("No registrations to export");
+      toast.error('No registrations to export');
       return;
     }
 
     const csvContent = [
       [
-        "Name",
-        "Email",
-        "Registered At",
-        "Checked In",
-        "Checked In At",
-        "QR Code",
+        'Name',
+        'Email',
+        'Registered At',
+        'Checked In',
+        'Checked In At',
+        'QR Code',
       ],
       ...registrations.map((reg) => [
         reg.attendeeName,
         reg.attendeeEmail,
         new Date(reg.registeredAt).toLocaleString(),
-        reg.checkedIn ? "Yes" : "No",
-        reg.checkedInAt ? new Date(reg.checkedInAt).toLocaleString() : "-",
+        reg.checkedIn ? 'Yes' : 'No',
+        reg.checkedInAt ? new Date(reg.checkedInAt).toLocaleString() : '-',
         reg.qrCode,
       ]),
     ]
-      .map((row) => row.join(","))
-      .join("\n");
+      .map((row) => row.join(','))
+      .join('\n');
 
-    const blob = new Blob([csvContent], { type: "text/csv" });
+    const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = `${dashboardData?.event.title || "event"}_registrations.csv`;
+    a.download = `${dashboardData?.event.title || 'event'}_registrations.csv`;
     a.click();
-    toast.success("CSV exported successfully");
+    toast.success('CSV exported successfully');
   };
 
   if (isLoading || loadingRegistrations) {
@@ -132,11 +132,11 @@ export default function EventDashboardPage() {
       reg.attendeeEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
       reg.qrCode.toLowerCase().includes(searchQuery.toLowerCase());
 
-    if (activeTab === "all") return matchesSearch && reg.status === "confirmed";
-    if (activeTab === "checked-in")
-      return matchesSearch && reg.checkedIn && reg.status === "confirmed";
-    if (activeTab === "pending")
-      return matchesSearch && !reg.checkedIn && reg.status === "confirmed";
+    if (activeTab === 'all') return matchesSearch && reg.status === 'confirmed';
+    if (activeTab === 'checked-in')
+      return matchesSearch && reg.checkedIn && reg.status === 'confirmed';
+    if (activeTab === 'pending')
+      return matchesSearch && !reg.checkedIn && reg.status === 'confirmed';
 
     return matchesSearch;
   });
@@ -148,7 +148,7 @@ export default function EventDashboardPage() {
         <div className="mb-6">
           <Button
             variant="ghost"
-            onClick={() => router.push("/my-events")}
+            onClick={() => router.push('/my-events')}
             className="gap-2 -ml-2"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -174,18 +174,18 @@ export default function EventDashboardPage() {
             <h1 className="text-3xl font-bold mb-3">{event.title}</h1>
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <Badge variant="outline">
-                {getCategoryIcon(event.category)}{" "}
+                {getCategoryIcon(event.category)}{' '}
                 {getCategoryLabel(event.category)}
               </Badge>
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                <span>{format(event.startDate, "PPP")}</span>
+                <span>{format(event.startDate, 'PPP')}</span>
               </div>
               <div className="flex items-center gap-1">
                 <MapPin className="w-4 h-4" />
                 <span>
-                  {event.locationType === "online"
-                    ? "Online"
+                  {event.locationType === 'online'
+                    ? 'Online'
                     : `${event.city}, ${event.state || event.country}`}
                 </span>
               </div>
@@ -210,7 +210,7 @@ export default function EventDashboardPage() {
               className="text-red-500 hover:text-red-600 gap-2 flex-1"
             >
               <Trash2 className="w-4 h-4" />
-              {isDeleting ? "Deleting..." : "Delete"}
+              {isDeleting ? 'Deleting...' : 'Delete'}
             </Button>
           </div>
         </div>
@@ -256,7 +256,7 @@ export default function EventDashboardPage() {
             </CardContent>
           </Card>
 
-          {event.ticketType === "paid" ? (
+          {event.ticketType === 'paid' ? (
             <Card className="py-0">
               <CardContent className="p-6 flex items-center gap-3">
                 <div className="p-3 bg-blue-100 rounded-lg">
@@ -290,13 +290,13 @@ export default function EventDashboardPage() {
               <div>
                 <p className="text-2xl font-bold">
                   {stats.isEventPast
-                    ? "Ended"
+                    ? 'Ended'
                     : stats.hoursUntilEvent > 24
                       ? `${Math.floor(stats.hoursUntilEvent / 24)}d`
                       : `${stats.hoursUntilEvent}h`}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {stats.isEventPast ? "Event Over" : "Time Left"}
+                  {stats.isEventPast ? 'Event Over' : 'Time Left'}
                 </p>
               </div>
             </CardContent>

@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Image from "next/image";
-import { Search, Loader2 } from "lucide-react";
+import { useState } from 'react';
+import Image from 'next/image';
+import { Search, Loader2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export default function UnsplashImagePicker({ isOpen, onClose, onSelect }) {
-  const [query, setQuery] = useState("event");
+  const [query, setQuery] = useState('event');
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +26,7 @@ export default function UnsplashImagePicker({ isOpen, onClose, onSelect }) {
       const data = await response.json();
       setImages(data.results || []);
     } catch (error) {
-      console.error("Error fetching images:", error);
+      console.error('Error fetching images:', error);
     } finally {
       setLoading(false);
     }
@@ -75,7 +75,7 @@ export default function UnsplashImagePicker({ isOpen, onClose, onSelect }) {
                 >
                   <Image
                     src={image.urls.small}
-                    alt={image.description || "Unsplash image"}
+                    alt={image.description || 'Unsplash image'}
                     className="w-full h-full object-cover"
                     width={400}
                     height={300}
@@ -93,7 +93,7 @@ export default function UnsplashImagePicker({ isOpen, onClose, onSelect }) {
         </div>
 
         <p className="text-xs text-muted-foreground">
-          Photos from{" "}
+          Photos from{' '}
           <a
             href="https://unsplash.com"
             target="_blank"

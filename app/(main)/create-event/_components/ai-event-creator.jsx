@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Sparkles, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { useState } from 'react';
+import { Sparkles, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
@@ -11,35 +11,35 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
+} from '@/components/ui/dialog';
+import { toast } from 'sonner';
 
 export default function AIEventCreator({ onEventGenerated }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
 
   const generateEvent = async () => {
     if (!prompt.trim()) {
-      toast.error("Please describe your event");
+      toast.error('Please describe your event');
       return;
     }
 
     setLoading(true);
     try {
-      const response = await fetch("/api/generate-event", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/generate-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt }),
       });
 
       const data = await response.json();
       onEventGenerated(data);
-      toast.success("Event details generated! Review and customize below.");
+      toast.success('Event details generated! Review and customize below.');
       setIsOpen(false);
-      setPrompt("");
+      setPrompt('');
     } catch (error) {
-      toast.error("Failed to generate event. Please try again.");
+      toast.error('Failed to generate event. Please try again.');
       console.error(error);
     } finally {
       setLoading(false);

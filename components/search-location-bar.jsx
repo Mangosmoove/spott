@@ -1,29 +1,29 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-"use client";
+'use client';
 
-import { useState, useEffect, useRef, useMemo } from "react";
-import { useRouter } from "next/navigation";
-import { Search, MapPin, Calendar, Loader2 } from "lucide-react";
-import { State, City } from "country-state-city";
-import { format } from "date-fns";
-import { useConvexQuery, useConvexMutation } from "@/hooks/use-convex-query";
-import { api } from "@/convex/_generated/api";
-import { createLocationSlug } from "@/lib/location-utils";
-import { getCategoryIcon } from "@/lib/data";
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { Search, MapPin, Calendar, Loader2 } from 'lucide-react';
+import { State, City } from 'country-state-city';
+import { format } from 'date-fns';
+import { useConvexQuery, useConvexMutation } from '@/hooks/use-convex-query';
+import { api } from '@/convex/_generated/api';
+import { createLocationSlug } from '@/lib/location-utils';
+import { getCategoryIcon } from '@/lib/data';
 
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 export default function SearchLocationBar() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const searchRef = useRef(null);
 
@@ -36,18 +36,18 @@ export default function SearchLocationBar() {
 
   const { data: searchResults, isLoading: searchLoading } = useConvexQuery(
     api.search.searchEvents,
-    searchQuery.trim().length >= 2 ? { query: searchQuery, limit: 5 } : "skip"
+    searchQuery.trim().length >= 2 ? { query: searchQuery, limit: 5 } : 'skip'
   );
 
-  const indianStates = useMemo(() => State.getStatesOfCountry("IN"), []);
+  const indianStates = useMemo(() => State.getStatesOfCountry('IN'), []);
 
-  const [selectedState, setSelectedState] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
 
   useEffect(() => {
     if (currentUser?.location) {
-      setSelectedState(currentUser.location.state || "");
-      setSelectedCity(currentUser.location.city || "");
+      setSelectedState(currentUser.location.state || '');
+      setSelectedCity(currentUser.location.city || '');
     }
   }, [currentUser, isLoading]);
 
@@ -67,7 +67,7 @@ export default function SearchLocationBar() {
     if (!selectedState) return [];
     const state = indianStates.find((s) => s.name === selectedState);
     if (!state) return [];
-    return City.getCitiesOfState("IN", state.isoCode);
+    return City.getCitiesOfState('IN', state.isoCode);
   }, [selectedState, indianStates]);
 
   const debouncedSetQuery = useRef(
@@ -82,7 +82,7 @@ export default function SearchLocationBar() {
 
   const handleEventClick = (slug) => {
     setShowSearchResults(false);
-    setSearchQuery("");
+    setSearchQuery('');
     router.push(`/events/${slug}`);
   };
 
@@ -90,14 +90,14 @@ export default function SearchLocationBar() {
     try {
       if (currentUser?.interests && currentUser?.location) {
         await updateLocation({
-          location: { city, state, country: "India" },
+          location: { city, state, country: 'India' },
           interests: currentUser.interests,
         });
       }
       const slug = createLocationSlug(city, state);
       router.push(`/explore/${slug}`);
     } catch (error) {
-      console.error("Failed to update location:", error);
+      console.error('Failed to update location:', error);
     }
   };
 
@@ -107,8 +107,8 @@ export default function SearchLocationBar() {
         setShowSearchResults(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (
@@ -156,7 +156,7 @@ export default function SearchLocationBar() {
                         <div className="flex items-center gap-3 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
-                            {format(event.startDate, "MMM dd")}
+                            {format(event.startDate, 'MMM dd')}
                           </span>
                           <span className="flex items-center gap-1">
                             <MapPin className="w-3 h-3" />
@@ -164,7 +164,7 @@ export default function SearchLocationBar() {
                           </span>
                         </div>
                       </div>
-                      {event.ticketType === "free" && (
+                      {event.ticketType === 'free' && (
                         <Badge variant="secondary" className="text-xs">
                           Free
                         </Badge>
@@ -183,7 +183,7 @@ export default function SearchLocationBar() {
         value={selectedState}
         onValueChange={(value) => {
           setSelectedState(value);
-          setSelectedCity("");
+          setSelectedCity('');
         }}
       >
         <SelectTrigger className="w-32 h-9 border-l-0 rounded-none">

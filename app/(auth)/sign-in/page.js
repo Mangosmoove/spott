@@ -1,12 +1,10 @@
-"use client";
+'use client';
 
 import { SignIn } from '@clerk/clerk-react';
-import React from 'react'
+import React from 'react';
 
 const SignInPage = () => {
-  return (
-    <SignIn />
-  )
-}
+  return <SignIn />;
+};
 
 export default SignInPage;

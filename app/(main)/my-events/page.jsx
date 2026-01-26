@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { Plus, Loader2 } from "lucide-react";
-import Link from "next/link";
-import { useConvexQuery, useConvexMutation } from "@/hooks/use-convex-query";
-import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
+import { useRouter } from 'next/navigation';
+import { Plus, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+import { useConvexQuery, useConvexMutation } from '@/hooks/use-convex-query';
+import { api } from '@/convex/_generated/api';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import EventCard from "@/components/event-card";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import EventCard from '@/components/event-card';
 
 export default function MyEventsPage() {
   const router = useRouter();
@@ -19,16 +19,16 @@ export default function MyEventsPage() {
 
   const handleDelete = async (eventId) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this event? This action cannot be undone and will permanently delete the event and all associated registrations."
+      'Are you sure you want to delete this event? This action cannot be undone and will permanently delete the event and all associated registrations.'
     );
 
     if (!confirmed) return;
 
     try {
       await deleteEvent({ eventId });
-      toast.success("Event deleted successfully");
+      toast.success('Event deleted successfully');
     } catch (error) {
-      toast.error(error.message || "Failed to delete event");
+      toast.error(error.message || 'Failed to delete event');
     }
   };
 

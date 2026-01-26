@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { useConvexQuery } from "./use-convex-query";
-import { api } from "@/convex/_generated/api";
+import { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useConvexQuery } from './use-convex-query';
+import { api } from '@/convex/_generated/api';
 
-const ATTENDEE_PAGES = ["/explore", "/events", "/my-tickets", "/profile"];
+const ATTENDEE_PAGES = ['/explore', '/events', '/my-tickets', '/profile'];
 
 export function useOnboarding() {
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -42,7 +42,7 @@ export function useOnboarding() {
   const handleOnboardingSkip = () => {
     setShowOnboarding(false);
     // Redirect back to homepage if they skip
-    router.push("/");
+    router.push('/');
   };
 
   return {

@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -12,18 +12,18 @@ export default function Home() {
             spott<span className="text-purple-400">*</span>
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6 leading-[0.95] tracking-tight">
               Discover & <br />
-              create amazing<br />
+              create amazing
+              <br />
               <span className="bg-linear-to-r from-blue-400 via-purple-400 to-orange-400 bg-clip-text text-transparent">
                 events
               </span>
             </h1>
-
-            <p className="text-lg sm:text-xl text-gray-400 max-w-lg font-light">
-              Whether you&apos;re hosting or attending, Spott makes every even memorable. Join our community today.
+            <p className="text-lg sm:text-xl text-gray-400 max-w-lg font-light mb-4">
+              Whether you&apos;re hosting or attending, Spott makes every even
+              memorable. Join our community today.
             </p>
-
             <Link href="/explore">
-              <Button size="xl" className={"rounded-full"}>
+              <Button size="xl" className={'rounded-full'}>
                 Get Started
               </Button>
             </Link>
@@ -31,8 +31,8 @@ export default function Home() {
 
           {/* right */}
           <div>
-            <Image 
-              src="/hero.png" 
+            <Image
+              src="/hero.png"
               alt="hero img"
               width={700}
               height={700}

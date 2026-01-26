@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/purity */
-"use client";
+'use client';
 
-import { useParams, useRouter } from "next/navigation";
-import { notFound } from "next/navigation";
-import { useState } from "react";
-import Image from "next/image";
-import { format } from "date-fns";
+import { useParams, useRouter } from 'next/navigation';
+import { notFound } from 'next/navigation';
+import { useState } from 'react';
+import Image from 'next/image';
+import { format } from 'date-fns';
 import {
   Calendar,
   MapPin,
@@ -16,28 +16,28 @@ import {
   ExternalLink,
   Loader2,
   CheckCircle,
-} from "lucide-react";
-import { useConvexQuery } from "@/hooks/use-convex-query";
-import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
-import { useUser } from "@clerk/nextjs";
+} from 'lucide-react';
+import { useConvexQuery } from '@/hooks/use-convex-query';
+import { api } from '@/convex/_generated/api';
+import { toast } from 'sonner';
+import { useUser } from '@clerk/nextjs';
 
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getCategoryIcon, getCategoryLabel } from "@/lib/data";
-import RegisterModal from "./_components/register-modal";
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { getCategoryIcon, getCategoryLabel } from '@/lib/data';
+import RegisterModal from './_components/register-modal';
 
 // Utility function to darken a color
 function darkenColor(color, amount) {
-  const colorWithoutHash = color.replace("#", "");
+  const colorWithoutHash = color.replace('#', '');
   const num = parseInt(colorWithoutHash, 16);
   const r = Math.max(0, (num >> 16) - amount * 255);
   const g = Math.max(0, ((num >> 8) & 0x00ff) - amount * 255);
   const b = Math.max(0, (num & 0x0000ff) - amount * 255);
-  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
 }
 
 export default function EventDetailPage() {
@@ -54,7 +54,7 @@ export default function EventDetailPage() {
   // Check if user is already registered
   const { data: registration } = useConvexQuery(
     api.registrations.checkRegistration,
-    event?._id ? { eventId: event._id } : "skip"
+    event?._id ? { eventId: event._id } : 'skip'
   );
 
   const handleShare = async () => {
@@ -63,7 +63,7 @@ export default function EventDetailPage() {
       try {
         await navigator.share({
           title: event.title,
-          text: event.description.slice(0, 100) + "...",
+          text: event.description.slice(0, 100) + '...',
           url: url,
         });
       } catch (error) {
@@ -72,13 +72,13 @@ export default function EventDetailPage() {
     } else {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(url);
-      toast.success("Link copied to clipboard!");
+      toast.success('Link copied to clipboard!');
     }
   };
 
   const handleRegister = () => {
     if (!user) {
-      toast.error("Please sign in to register");
+      toast.error('Please sign in to register');
       return;
     }
     setShowRegisterModal(true);
@@ -103,7 +103,7 @@ export default function EventDetailPage() {
   return (
     <div
       style={{
-        backgroundColor: event.themeColor || "#1e3a8a",
+        backgroundColor: event.themeColor || '#1e3a8a',
       }}
       className="min-h-screen py-8 -mt-6 md:-mt-16 lg:-mx-5"
     >
@@ -117,13 +117,13 @@ export default function EventDetailPage() {
           <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5" />
-              <span>{format(event.startDate, "EEEE, MMMM dd, yyyy")}</span>
+              <span>{format(event.startDate, 'EEEE, MMMM dd, yyyy')}</span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-5 h-5" />
               <span>
-                {format(event.startDate, "h:mm a")} -{" "}
-                {format(event.endDate, "h:mm a")}
+                {format(event.startDate, 'h:mm a')} -{' '}
+                {format(event.endDate, 'h:mm a')}
               </span>
             </div>
           </div>
@@ -147,11 +147,11 @@ export default function EventDetailPage() {
           <div className="space-y-8">
             {/* Description */}
             <Card
-              className={"pt-0"}
+              className={'pt-0'}
               style={{
                 backgroundColor: event.themeColor
                   ? darkenColor(event.themeColor, 0.04)
-                  : "#1e3a8a",
+                  : '#1e3a8a',
               }}
             >
               <CardContent className="pt-6">
@@ -164,11 +164,11 @@ export default function EventDetailPage() {
 
             {/* Location Details */}
             <Card
-              className={"pt-0"}
+              className={'pt-0'}
               style={{
                 backgroundColor: event.themeColor
                   ? darkenColor(event.themeColor, 0.04)
-                  : "#1e3a8a",
+                  : '#1e3a8a',
               }}
             >
               <CardContent className="pt-6">
@@ -204,11 +204,11 @@ export default function EventDetailPage() {
 
             {/* Organizer Info */}
             <Card
-              className={"pt-0"}
+              className={'pt-0'}
               style={{
                 backgroundColor: event.themeColor
                   ? darkenColor(event.themeColor, 0.04)
-                  : "#1e3a8a",
+                  : '#1e3a8a',
               }}
             >
               <CardContent className="pt-6">
@@ -238,7 +238,7 @@ export default function EventDetailPage() {
               style={{
                 backgroundColor: event.themeColor
                   ? darkenColor(event.themeColor, 0.04)
-                  : "#1e3a8a",
+                  : '#1e3a8a',
               }}
             >
               <CardContent className="p-6 space-y-4">
@@ -246,11 +246,11 @@ export default function EventDetailPage() {
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Price</p>
                   <p className="text-3xl font-bold">
-                    {event.ticketType === "free"
-                      ? "Free"
+                    {event.ticketType === 'free'
+                      ? 'Free'
                       : `₹${event.ticketPrice}`}
                   </p>
-                  {event.ticketType === "paid" && (
+                  {event.ticketType === 'paid' && (
                     <p className="text-xs text-muted-foreground mt-1">
                       Pay at event offline
                     </p>
@@ -277,7 +277,7 @@ export default function EventDetailPage() {
                       <span className="text-sm">Date</span>
                     </div>
                     <p className="font-semibold text-sm">
-                      {format(event.startDate, "MMM dd")}
+                      {format(event.startDate, 'MMM dd')}
                     </p>
                   </div>
 
@@ -287,7 +287,7 @@ export default function EventDetailPage() {
                       <span className="text-sm">Time</span>
                     </div>
                     <p className="font-semibold text-sm">
-                      {format(event.startDate, "h:mm a")}
+                      {format(event.startDate, 'h:mm a')}
                     </p>
                   </div>
                 </div>
@@ -305,7 +305,7 @@ export default function EventDetailPage() {
                     </div>
                     <Button
                       className="w-full gap-2"
-                      onClick={() => router.push("/my-tickets")}
+                      onClick={() => router.push('/my-tickets')}
                     >
                       <Ticket className="w-4 h-4" />
                       View Ticket

@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import { Calendar, MapPin, Users, Trash2, X, QrCode, Eye } from "lucide-react";
-import { format } from "date-fns";
-import Image from "next/image";
-import { getCategoryIcon, getCategoryLabel } from "@/lib/data";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Calendar, MapPin, Users, Trash2, X, QrCode, Eye } from 'lucide-react';
+import { format } from 'date-fns';
+import Image from 'next/image';
+import { getCategoryIcon, getCategoryLabel } from '@/lib/data';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 export default function EventCard({
   event,
   onClick,
   onDelete,
-  variant = "grid", // "grid" or "list"
+  variant = 'grid', // "grid" or "list"
   action = null, // "event" | "ticket" | null
-  className = "",
+  className = '',
 }) {
   // List variant (compact horizontal layout)
-  if (variant === "list") {
+  if (variant === 'list') {
     return (
       <Card
         className={`py-0 group cursor-pointer hover:shadow-lg transition-all hover:border-purple-500/50 ${className}`}
@@ -49,12 +49,12 @@ export default function EventCard({
               {event.title}
             </h3>
             <p className="text-xs text-muted-foreground mb-1">
-              {format(event.startDate, "EEE, dd MMM, HH:mm")}
+              {format(event.startDate, 'EEE, dd MMM, HH:mm')}
             </p>
             <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
               <MapPin className="w-3 h-3" />
               <span className="line-clamp-1">
-                {event.locationType === "online" ? "Online Event" : event.city}
+                {event.locationType === 'online' ? 'Online Event' : event.city}
               </span>
             </div>
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -70,7 +70,7 @@ export default function EventCard({
   // Grid variant (default - original design)
   return (
     <Card
-      className={`overflow-hidden group pt-0 ${onClick ? "cursor-pointer hover:shadow-lg transition-all hover:border-purple-500/50" : ""} ${className}`}
+      className={`overflow-hidden group pt-0 ${onClick ? 'cursor-pointer hover:shadow-lg transition-all hover:border-purple-500/50' : ''} ${className}`}
       onClick={onClick}
     >
       <div className="relative h-48 overflow-hidden">
@@ -93,7 +93,7 @@ export default function EventCard({
         )}
         <div className="absolute top-3 right-3">
           <Badge variant="secondary">
-            {event.ticketType === "free" ? "Free" : "Paid"}
+            {event.ticketType === 'free' ? 'Free' : 'Paid'}
           </Badge>
         </div>
       </div>
@@ -111,13 +111,13 @@ export default function EventCard({
         <div className="space-y-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
-            <span>{format(event.startDate, "PPP")}</span>
+            <span>{format(event.startDate, 'PPP')}</span>
           </div>
           <div className="flex items-center gap-2">
             <MapPin className="w-4 h-4" />
             <span className="line-clamp-1">
-              {event.locationType === "online"
-                ? "Online Event"
+              {event.locationType === 'online'
+                ? 'Online Event'
                 : `${event.city}, ${event.state || event.country}`}
             </span>
           </div>
@@ -141,7 +141,7 @@ export default function EventCard({
                 onClick?.(e);
               }}
             >
-              {action === "event" ? (
+              {action === 'event' ? (
                 <>
                   <Eye className="w-4 h-4" />
                   View
@@ -165,7 +165,7 @@ export default function EventCard({
                   onDelete(event._id);
                 }}
               >
-                {action === "event" ? (
+                {action === 'event' ? (
                   <Trash2 className="w-4 h-4" />
                 ) : (
                   <X className="w-4 h-4" />

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { QrCode, Loader2 } from "lucide-react";
-import { useConvexMutation } from "@/hooks/use-convex-query";
-import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
+import { useState, useEffect } from 'react';
+import { QrCode, Loader2 } from 'lucide-react';
+import { useConvexMutation } from '@/hooks/use-convex-query';
+import { api } from '@/convex/_generated/api';
+import { toast } from 'sonner';
 
 import {
   Dialog,
@@ -12,7 +12,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
 export default function QRScannerModal({ isOpen, onClose }) {
   const [scannerReady, setScannerReady] = useState(false);
@@ -27,13 +27,13 @@ export default function QRScannerModal({ isOpen, onClose }) {
       const result = await checkInAttendee({ qrCode });
 
       if (result.success) {
-        toast.success("✅ Check-in successful!");
+        toast.success('✅ Check-in successful!');
         onClose();
       } else {
-        toast.error(result.message || "Check-in failed");
+        toast.error(result.message || 'Check-in failed');
       }
     } catch (error) {
-      toast.error(error.message || "Invalid QR code");
+      toast.error(error.message || 'Invalid QR code');
     }
   };
 
@@ -46,41 +46,41 @@ export default function QRScannerModal({ isOpen, onClose }) {
       if (!isOpen) return;
 
       try {
-        console.log("Initializing QR scanner...");
+        console.log('Initializing QR scanner...');
 
         // Check camera permissions first
         try {
           await navigator.mediaDevices.getUserMedia({ video: true });
-          console.log("Camera permission granted");
+          console.log('Camera permission granted');
         } catch (permError) {
-          console.error("Camera permission denied:", permError);
-          setError("Camera permission denied. Please enable camera access.");
+          console.error('Camera permission denied:', permError);
+          setError('Camera permission denied. Please enable camera access.');
           return;
         }
 
         // Dynamically import the library
-        const { Html5QrcodeScanner } = await import("html5-qrcode");
+        const { Html5QrcodeScanner } = await import('html5-qrcode');
 
         if (!mounted) return;
 
-        console.log("Creating scanner instance...");
+        console.log('Creating scanner instance...');
 
         scanner = new Html5QrcodeScanner(
-          "qr-reader",
+          'qr-reader',
           {
             fps: 10,
             qrbox: { width: 250, height: 250 },
             aspectRatio: 1.0,
             showTorchButtonIfSupported: true,
             videoConstraints: {
-              facingMode: "environment", // Use back camera on mobile
+              facingMode: 'environment', // Use back camera on mobile
             },
           },
           /* verbose= */ false
         );
 
         const onScanSuccess = (decodedText) => {
-          console.log("QR Code detected:", decodedText);
+          console.log('QR Code detected:', decodedText);
           if (scanner) {
             scanner.clear().catch(console.error);
           }
@@ -89,19 +89,19 @@ export default function QRScannerModal({ isOpen, onClose }) {
 
         const onScanError = (error) => {
           // Only log actual errors, not "no QR code found" messages
-          if (error && !error.includes("NotFoundException")) {
-            console.debug("Scan error:", error);
+          if (error && !error.includes('NotFoundException')) {
+            console.debug('Scan error:', error);
           }
         };
 
         scanner.render(onScanSuccess, onScanError);
         setScannerReady(true);
         setError(null);
-        console.log("Scanner rendered successfully");
+        console.log('Scanner rendered successfully');
       } catch (error) {
-        console.error("Failed to initialize scanner:", error);
+        console.error('Failed to initialize scanner:', error);
         setError(`Failed to start camera: ${error.message}`);
-        toast.error("Camera failed. Please use manual entry.");
+        toast.error('Camera failed. Please use manual entry.');
       }
     };
 
@@ -110,7 +110,7 @@ export default function QRScannerModal({ isOpen, onClose }) {
     return () => {
       mounted = false;
       if (scanner) {
-        console.log("Cleaning up scanner...");
+        console.log('Cleaning up scanner...');
         scanner.clear().catch(console.error);
       }
       setScannerReady(false);
@@ -137,7 +137,7 @@ export default function QRScannerModal({ isOpen, onClose }) {
             <div
               id="qr-reader"
               className="w-full"
-              style={{ minHeight: "350px" }}
+              style={{ minHeight: '350px' }}
             ></div>
             {!scannerReady && (
               <div className="flex items-center justify-center py-4">
@@ -149,8 +149,8 @@ export default function QRScannerModal({ isOpen, onClose }) {
             )}
             <p className="text-sm text-muted-foreground text-center">
               {scannerReady
-                ? "Position the QR code within the frame"
-                : "Please allow camera access when prompted"}
+                ? 'Position the QR code within the frame'
+                : 'Please allow camera access when prompted'}
             </p>
           </>
         )}

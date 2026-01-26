@@ -1,25 +1,25 @@
 /* eslint-disable react-hooks/purity */
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { format } from "date-fns";
-import { Calendar, MapPin, Loader2, Ticket } from "lucide-react";
-import { useConvexQuery, useConvexMutation } from "@/hooks/use-convex-query";
-import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
-import QRCode from "react-qr-code";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { format } from 'date-fns';
+import { Calendar, MapPin, Loader2, Ticket } from 'lucide-react';
+import { useConvexQuery, useConvexMutation } from '@/hooks/use-convex-query';
+import { api } from '@/convex/_generated/api';
+import { toast } from 'sonner';
+import QRCode from 'react-qr-code';
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import Link from "next/link";
-import EventCard from "@/components/event-card";
+} from '@/components/ui/dialog';
+import Link from 'next/link';
+import EventCard from '@/components/event-card';
 
 export default function MyTicketsPage() {
   const router = useRouter();
@@ -33,14 +33,14 @@ export default function MyTicketsPage() {
     useConvexMutation(api.registrations.cancelRegistration);
 
   const handleCancelRegistration = async (registrationId) => {
-    if (!window.confirm("Are you sure you want to cancel this registration?"))
+    if (!window.confirm('Are you sure you want to cancel this registration?'))
       return;
 
     try {
       await cancelRegistration({ registrationId });
-      toast.success("Registration cancelled successfully.");
+      toast.success('Registration cancelled successfully.');
     } catch (error) {
-      toast.error(error.message || "Failed to cancel registration");
+      toast.error(error.message || 'Failed to cancel registration');
     }
   };
 
@@ -56,11 +56,11 @@ export default function MyTicketsPage() {
 
   const upcomingTickets = registrations?.filter(
     (reg) =>
-      reg.event && reg.event.startDate >= now && reg.status === "confirmed"
+      reg.event && reg.event.startDate >= now && reg.status === 'confirmed'
   );
   const pastTickets = registrations?.filter(
     (reg) =>
-      reg.event && (reg.event.startDate < now || reg.status === "cancelled")
+      reg.event && (reg.event.startDate < now || reg.status === 'cancelled')
   );
 
   return (
@@ -163,14 +163,14 @@ export default function MyTicketsPage() {
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
                   <span>
-                    {format(selectedTicket.event.startDate, "PPP, h:mm a")}
+                    {format(selectedTicket.event.startDate, 'PPP, h:mm a')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4" />
                   <span>
-                    {selectedTicket.event.locationType === "online"
-                      ? "Online Event"
+                    {selectedTicket.event.locationType === 'online'
+                      ? 'Online Event'
                       : `${selectedTicket.event.city}, ${
                           selectedTicket.event.state ||
                           selectedTicket.event.country

@@ -1,101 +1,101 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
-import { MapPin, Heart, ArrowRight, ArrowLeft } from "lucide-react";
-import { useConvexMutation } from "@/hooks/use-convex-query";
-import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
-import { State, City } from "country-state-city";
+import { useState, useMemo } from 'react';
+import { MapPin, Heart, ArrowRight, ArrowLeft } from 'lucide-react';
+import { useConvexMutation } from '@/hooks/use-convex-query';
+import { api } from '@/convex/_generated/api';
+import { toast } from 'sonner';
+import { State, City } from 'country-state-city';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { CATEGORIES } from "@/lib/data";
+} from '@/components/ui/select';
+import { CATEGORIES } from '@/lib/data';
 
 export default function OnboardingModal({ isOpen, onClose, onComplete }) {
-    const [step, setStep] = useState(1);
-    const [selectedInterests, setSelectedInterests] = useState([]);
-    const [location, setLocation] = useState({
-        state: "",
-        city: "",
-        country: "India",
-    });
+  const [step, setStep] = useState(1);
+  const [selectedInterests, setSelectedInterests] = useState([]);
+  const [location, setLocation] = useState({
+    state: '',
+    city: '',
+    country: 'India',
+  });
 
-    const { mutate: completeOnboarding, isLoading } = useConvexMutation(
-        api.users.completeOnboarding
-      );
+  const { mutate: completeOnboarding, isLoading } = useConvexMutation(
+    api.users.completeOnboarding
+  );
 
-    // Get Indian states
-    const indianStates = useMemo(() => {
-        return State.getStatesOfCountry("IN");
-    }, []);
+  // Get Indian states
+  const indianStates = useMemo(() => {
+    return State.getStatesOfCountry('IN');
+  }, []);
 
-    // Get cities based on selected state
-    const cities = useMemo(() => {
-        if (!location.state) return [];
-        const selectedState = indianStates.find((s) => s.name === location.state);
-        
-        if (!selectedState) return [];
-        return City.getCitiesOfState("IN", selectedState.isoCode);
-    }, [location.state, indianStates]);
+  // Get cities based on selected state
+  const cities = useMemo(() => {
+    if (!location.state) return [];
+    const selectedState = indianStates.find((s) => s.name === location.state);
 
-    const toggleInterest = (categoryId) => {
-        setSelectedInterests((prev) =>
-            prev.includes(categoryId)
-            ? prev.filter((id) => id !== categoryId)
-            : [...prev, categoryId]
-        );
-    };
+    if (!selectedState) return [];
+    return City.getCitiesOfState('IN', selectedState.isoCode);
+  }, [location.state, indianStates]);
 
-    const handleNext = () => {
-        if (step === 1 && selectedInterests.length < 3) {
-            toast.error("Please select at least 3 interests");
-            return;
-        }
-        if (step === 2 && (!location.city || !location.state)) {
-            toast.error("Please select both state and city");
-            return;
-        }
-        if (step < 2) {
-            setStep(step + 1);
-        } else {
-            handleComplete();
-        }
-    };
+  const toggleInterest = (categoryId) => {
+    setSelectedInterests((prev) =>
+      prev.includes(categoryId)
+        ? prev.filter((id) => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
 
-    const handleComplete = async () => {
-        try {
-            await completeOnboarding({
-                location: {
-                    city: location.city,
-                    state: location.state,
-                    country: location.country,
-                },
-                interests: selectedInterests,
-            });
-            toast.success("Welcome to Spott! 🎉");
-            onComplete();
-        } catch (error) {
-            toast.error("Failed to complete onboarding");
-            console.error(error);
-        }
-    };
+  const handleNext = () => {
+    if (step === 1 && selectedInterests.length < 3) {
+      toast.error('Please select at least 3 interests');
+      return;
+    }
+    if (step === 2 && (!location.city || !location.state)) {
+      toast.error('Please select both state and city');
+      return;
+    }
+    if (step < 2) {
+      setStep(step + 1);
+    } else {
+      handleComplete();
+    }
+  };
 
-    const progress = (step / 2) * 100;
+  const handleComplete = async () => {
+    try {
+      await completeOnboarding({
+        location: {
+          city: location.city,
+          state: location.state,
+          country: location.country,
+        },
+        interests: selectedInterests,
+      });
+      toast.success('Welcome to Spott! 🎉');
+      onComplete();
+    } catch (error) {
+      toast.error('Failed to complete onboarding');
+      console.error(error);
+    }
+  };
+
+  const progress = (step / 2) * 100;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -119,7 +119,7 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }) {
           </DialogTitle>
           <DialogDescription>
             {step === 1
-              ? "Select at least 3 categories to personalize your experience"
+              ? 'Select at least 3 categories to personalize your experience'
               : "We'll show you events happening near you"}
           </DialogDescription>
         </DialogHeader>
@@ -135,8 +135,8 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }) {
                     onClick={() => toggleInterest(category.id)}
                     className={`p-4 rounded-lg border-2 transition-all hover:scale-105 ${
                       selectedInterests.includes(category.id)
-                        ? "border-purple-500 bg-purple-500/10 shadow-lg shadow-purple-500/20"
-                        : "border-border hover:border-purple-300"
+                        ? 'border-purple-500 bg-purple-500/10 shadow-lg shadow-purple-500/20'
+                        : 'border-border hover:border-purple-300'
                     }`}
                   >
                     <div className="text-2xl mb-2">{category.icon}</div>
@@ -148,7 +148,7 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }) {
               <div className="flex items-center gap-2">
                 <Badge
                   variant={
-                    selectedInterests.length >= 3 ? "default" : "secondary"
+                    selectedInterests.length >= 3 ? 'default' : 'secondary'
                   }
                 >
                   {selectedInterests.length} selected
@@ -171,7 +171,7 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }) {
                   <Select
                     value={location.state}
                     onValueChange={(value) => {
-                      setLocation({ ...location, state: value, city: "" });
+                      setLocation({ ...location, state: value, city: '' });
                     }}
                   >
                     <SelectTrigger id="state" className="h-11 w-full">
@@ -199,7 +199,7 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }) {
                     <SelectTrigger id="city" className="h-11 w-full">
                       <SelectValue
                         placeholder={
-                          location.state ? "Select city" : "State first"
+                          location.state ? 'Select city' : 'State first'
                         }
                       />
                     </SelectTrigger>
@@ -255,10 +255,10 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }) {
             className="flex-1 gap-2"
           >
             {isLoading
-              ? "Completing..."
+              ? 'Completing...'
               : step === 2
-                ? "Complete Setup"
-                : "Continue"}
+                ? 'Complete Setup'
+                : 'Continue'}
             <ArrowRight className="w-4 h-4" />
           </Button>
         </div>

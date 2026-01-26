@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2, Ticket, CheckCircle } from "lucide-react";
-import { useConvexMutation } from "@/hooks/use-convex-query";
-import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
-import { useUser } from "@clerk/nextjs";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Loader2, Ticket, CheckCircle } from 'lucide-react';
+import { useConvexMutation } from '@/hooks/use-convex-query';
+import { api } from '@/convex/_generated/api';
+import { toast } from 'sonner';
+import { useUser } from '@clerk/nextjs';
 
 import {
   Dialog,
@@ -14,18 +14,18 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 
 export default function RegisterModal({ event, isOpen, onClose }) {
   const router = useRouter();
   const { user } = useUser();
-  const [name, setName] = useState(user?.fullName || "");
+  const [name, setName] = useState(user?.fullName || '');
   const [email, setEmail] = useState(
-    user?.primaryEmailAddress?.emailAddress || ""
+    user?.primaryEmailAddress?.emailAddress || ''
   );
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -37,7 +37,7 @@ export default function RegisterModal({ event, isOpen, onClose }) {
     e.preventDefault();
 
     if (!name.trim() || !email.trim()) {
-      toast.error("Please fill in all fields");
+      toast.error('Please fill in all fields');
       return;
     }
 
@@ -49,14 +49,14 @@ export default function RegisterModal({ event, isOpen, onClose }) {
       });
 
       setIsSuccess(true);
-      toast.success("Registration successful! 🎉");
+      toast.success('Registration successful! 🎉');
     } catch (error) {
-      toast.error(error.message || "Registration failed");
+      toast.error(error.message || 'Registration failed');
     }
   };
 
   const handleViewTicket = () => {
-    router.push("/my-tickets");
+    router.push('/my-tickets');
     onClose();
   };
 
@@ -108,11 +108,11 @@ export default function RegisterModal({ event, isOpen, onClose }) {
           <div className="bg-muted p-4 rounded-lg space-y-2">
             <p className="font-semibold">{event.title}</p>
             <p className="text-sm text-muted-foreground">
-              {event.ticketType === "free" ? (
-                "Free Event"
+              {event.ticketType === 'free' ? (
+                'Free Event'
               ) : (
                 <span>
-                  Price: ₹{event.ticketPrice}{" "}
+                  Price: ₹{event.ticketPrice}{' '}
                   <span className="text-xs">(Pay at venue)</span>
                 </span>
               )}

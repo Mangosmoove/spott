@@ -1,76 +1,76 @@
 /* eslint-disable react-hooks/incompatible-library */
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { format } from "date-fns";
-import { State, City } from "country-state-city";
-import { CalendarIcon, Loader2, Sparkles } from "lucide-react";
-import { useConvexMutation, useConvexQuery } from "@/hooks/use-convex-query";
-import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
-import { useAuth } from "@clerk/nextjs";
+import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { format } from 'date-fns';
+import { State, City } from 'country-state-city';
+import { CalendarIcon, Loader2, Sparkles } from 'lucide-react';
+import { useConvexMutation, useConvexQuery } from '@/hooks/use-convex-query';
+import { api } from '@/convex/_generated/api';
+import { toast } from 'sonner';
+import { useAuth } from '@clerk/nextjs';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
+} from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
-import UnsplashImagePicker from "@/components/unsplash-image-picker";
-import AIEventCreator from "./_components/ai-event-creator";
-import UpgradeModal from "@/components/upgrade-modal";
-import { CATEGORIES } from "@/lib/data";
-import Image from "next/image";
+import UnsplashImagePicker from '@/components/unsplash-image-picker';
+import AIEventCreator from './_components/ai-event-creator';
+import UpgradeModal from '@/components/upgrade-modal';
+import { CATEGORIES } from '@/lib/data';
+import Image from 'next/image';
 
 // HH:MM in 24h
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 const eventSchema = z.object({
-  title: z.string().min(5, "Title must be at least 5 characters"),
-  description: z.string().min(20, "Description must be at least 20 characters"),
-  category: z.string().min(1, "Please select a category"),
-  startDate: z.date({ required_error: "Start date is required" }),
-  endDate: z.date({ required_error: "End date is required" }),
-  startTime: z.string().regex(timeRegex, "Start time must be HH:MM"),
-  endTime: z.string().regex(timeRegex, "End time must be HH:MM"),
-  locationType: z.enum(["physical", "online"]).default("physical"),
-  venue: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  title: z.string().min(5, 'Title must be at least 5 characters'),
+  description: z.string().min(20, 'Description must be at least 20 characters'),
+  category: z.string().min(1, 'Please select a category'),
+  startDate: z.date({ required_error: 'Start date is required' }),
+  endDate: z.date({ required_error: 'End date is required' }),
+  startTime: z.string().regex(timeRegex, 'Start time must be HH:MM'),
+  endTime: z.string().regex(timeRegex, 'End time must be HH:MM'),
+  locationType: z.enum(['physical', 'online']).default('physical'),
+  venue: z.string().url('Must be a valid URL').optional().or(z.literal('')),
   address: z.string().optional(),
-  city: z.string().min(1, "City is required"),
+  city: z.string().min(1, 'City is required'),
   state: z.string().optional(),
-  capacity: z.number().min(1, "Capacity must be at least 1"),
-  ticketType: z.enum(["free", "paid"]).default("free"),
+  capacity: z.number().min(1, 'Capacity must be at least 1'),
+  ticketType: z.enum(['free', 'paid']).default('free'),
   ticketPrice: z.number().optional(),
   coverImage: z.string().optional(),
-  themeColor: z.string().default("#1e3a8a"),
+  themeColor: z.string().default('#1e3a8a'),
 });
 
 export default function CreateEventPage() {
   const router = useRouter();
   const [showImagePicker, setShowImagePicker] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [upgradeReason, setUpgradeReason] = useState("limit"); // "limit" or "color"
+  const [upgradeReason, setUpgradeReason] = useState('limit'); // "limit" or "color"
 
   // Check if user has Pro plan
   const { has } = useAuth();
-  const hasPro = has?.({ plan: "pro" });
+  const hasPro = has?.({ plan: 'pro' });
 
   const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
   const { mutate: createEvent, isLoading } = useConvexMutation(
@@ -87,52 +87,52 @@ export default function CreateEventPage() {
   } = useForm({
     resolver: zodResolver(eventSchema),
     defaultValues: {
-      locationType: "physical",
-      ticketType: "free",
+      locationType: 'physical',
+      ticketType: 'free',
       capacity: 50,
-      themeColor: "#1e3a8a",
-      category: "",
-      state: "",
-      city: "",
-      startTime: "",
-      endTime: "",
+      themeColor: '#1e3a8a',
+      category: '',
+      state: '',
+      city: '',
+      startTime: '',
+      endTime: '',
     },
   });
 
-  const themeColor = watch("themeColor");
-  const ticketType = watch("ticketType");
-  const selectedState = watch("state");
-  const startDate = watch("startDate");
-  const endDate = watch("endDate");
-  const coverImage = watch("coverImage");
+  const themeColor = watch('themeColor');
+  const ticketType = watch('ticketType');
+  const selectedState = watch('state');
+  const startDate = watch('startDate');
+  const endDate = watch('endDate');
+  const coverImage = watch('coverImage');
 
-  const indianStates = useMemo(() => State.getStatesOfCountry("IN"), []);
+  const indianStates = useMemo(() => State.getStatesOfCountry('IN'), []);
   const cities = useMemo(() => {
     if (!selectedState) return [];
     const st = indianStates.find((s) => s.name === selectedState);
     if (!st) return [];
-    return City.getCitiesOfState("IN", st.isoCode);
+    return City.getCitiesOfState('IN', st.isoCode);
   }, [selectedState, indianStates]);
 
   // Color presets - show all for Pro, only default for Free
   const colorPresets = [
-    "#1e3a8a", // Default color (always available)
-    ...(hasPro ? ["#4c1d95", "#065f46", "#92400e", "#7f1d1d", "#831843"] : []),
+    '#1e3a8a', // Default color (always available)
+    ...(hasPro ? ['#4c1d95', '#065f46', '#92400e', '#7f1d1d', '#831843'] : []),
   ];
 
   const handleColorClick = (color) => {
     // If not default color and user doesn't have Pro
-    if (color !== "#1e3a8a" && !hasPro) {
-      setUpgradeReason("color");
+    if (color !== '#1e3a8a' && !hasPro) {
+      setUpgradeReason('color');
       setShowUpgradeModal(true);
       return;
     }
-    setValue("themeColor", color);
+    setValue('themeColor', color);
   };
 
   const combineDateTime = (date, time) => {
     if (!date || !time) return null;
-    const [hh, mm] = time.split(":").map(Number);
+    const [hh, mm] = time.split(':').map(Number);
     const d = new Date(date);
     d.setHours(hh, mm, 0, 0);
     return d;
@@ -144,24 +144,24 @@ export default function CreateEventPage() {
       const end = combineDateTime(data.endDate, data.endTime);
 
       if (!start || !end) {
-        toast.error("Please select both date and time for start and end.");
+        toast.error('Please select both date and time for start and end.');
         return;
       }
       if (end.getTime() <= start.getTime()) {
-        toast.error("End date/time must be after start date/time.");
+        toast.error('End date/time must be after start date/time.');
         return;
       }
 
       // Check event limit for Free users
       if (!hasPro && currentUser?.freeEventsCreated >= 1) {
-        setUpgradeReason("limit");
+        setUpgradeReason('limit');
         setShowUpgradeModal(true);
         return;
       }
 
       // Check if trying to use custom color without Pro
-      if (data.themeColor !== "#1e3a8a" && !hasPro) {
-        setUpgradeReason("color");
+      if (data.themeColor !== '#1e3a8a' && !hasPro) {
+        setUpgradeReason('color');
         setShowUpgradeModal(true);
         return;
       }
@@ -179,7 +179,7 @@ export default function CreateEventPage() {
         address: data.address || undefined,
         city: data.city,
         state: data.state || undefined,
-        country: "India",
+        country: 'India',
         capacity: data.capacity,
         ticketType: data.ticketType,
         ticketPrice: data.ticketPrice || undefined,
@@ -187,20 +187,20 @@ export default function CreateEventPage() {
         themeColor: data.themeColor,
       });
 
-      toast.success("Event created successfully! 🎉");
-      router.push("/my-events");
+      toast.success('Event created successfully! 🎉');
+      router.push('/my-events');
     } catch (error) {
-      toast.error(error.message || "Failed to create event");
+      toast.error(error.message || 'Failed to create event');
     }
   };
 
   const handleAIGenerate = (generatedData) => {
-    setValue("title", generatedData.title);
-    setValue("description", generatedData.description);
-    setValue("category", generatedData.category);
-    setValue("capacity", generatedData.suggestedCapacity);
-    setValue("ticketType", generatedData.suggestedTicketType);
-    toast.success("Event details filled! Customize as needed.");
+    setValue('title', generatedData.title);
+    setValue('description', generatedData.description);
+    setValue('category', generatedData.category);
+    setValue('capacity', generatedData.suggestedCapacity);
+    setValue('ticketType', generatedData.suggestedTicketType);
+    toast.success('Event details filled! Customize as needed.');
   };
 
   return (
@@ -260,19 +260,19 @@ export default function CreateEventPage() {
                   key={color}
                   type="button"
                   className={`w-10 h-10 rounded-full border-2 transition-all ${
-                    !hasPro && color !== "#1e3a8a"
-                      ? "opacity-40 cursor-not-allowed"
-                      : "hover:scale-110"
+                    !hasPro && color !== '#1e3a8a'
+                      ? 'opacity-40 cursor-not-allowed'
+                      : 'hover:scale-110'
                   }`}
                   style={{
                     backgroundColor: color,
-                    borderColor: themeColor === color ? "white" : "transparent",
+                    borderColor: themeColor === color ? 'white' : 'transparent',
                   }}
                   onClick={() => handleColorClick(color)}
                   title={
-                    !hasPro && color !== "#1e3a8a"
-                      ? "Upgrade to Pro for custom colors"
-                      : ""
+                    !hasPro && color !== '#1e3a8a'
+                      ? 'Upgrade to Pro for custom colors'
+                      : ''
                   }
                 />
               ))}
@@ -280,7 +280,7 @@ export default function CreateEventPage() {
                 <button
                   type="button"
                   onClick={() => {
-                    setUpgradeReason("color");
+                    setUpgradeReason('color');
                     setShowUpgradeModal(true);
                   }}
                   className="w-10 h-10 rounded-full border-2 border-dashed border-purple-300 flex items-center justify-center hover:border-purple-500 transition-colors"
@@ -303,7 +303,7 @@ export default function CreateEventPage() {
           {/* Title */}
           <div>
             <Input
-              {...register("title")}
+              {...register('title')}
               placeholder="Event Name"
               className="text-3xl font-semibold bg-transparent border-none focus-visible:ring-0"
             />
@@ -326,7 +326,7 @@ export default function CreateEventPage() {
                       variant="outline"
                       className="w-full justify-between"
                     >
-                      {startDate ? format(startDate, "PPP") : "Pick date"}
+                      {startDate ? format(startDate, 'PPP') : 'Pick date'}
                       <CalendarIcon className="w-4 h-4 opacity-60" />
                     </Button>
                   </PopoverTrigger>
@@ -334,13 +334,13 @@ export default function CreateEventPage() {
                     <Calendar
                       mode="single"
                       selected={startDate}
-                      onSelect={(date) => setValue("startDate", date)}
+                      onSelect={(date) => setValue('startDate', date)}
                     />
                   </PopoverContent>
                 </Popover>
                 <Input
                   type="time"
-                  {...register("startTime")}
+                  {...register('startTime')}
                   placeholder="hh:mm"
                 />
               </div>
@@ -361,7 +361,7 @@ export default function CreateEventPage() {
                       variant="outline"
                       className="w-full justify-between"
                     >
-                      {endDate ? format(endDate, "PPP") : "Pick date"}
+                      {endDate ? format(endDate, 'PPP') : 'Pick date'}
                       <CalendarIcon className="w-4 h-4 opacity-60" />
                     </Button>
                   </PopoverTrigger>
@@ -369,14 +369,14 @@ export default function CreateEventPage() {
                     <Calendar
                       mode="single"
                       selected={endDate}
-                      onSelect={(date) => setValue("endDate", date)}
+                      onSelect={(date) => setValue('endDate', date)}
                       disabled={(date) => date < (startDate || new Date())}
                     />
                   </PopoverContent>
                 </Popover>
                 <Input
                   type="time"
-                  {...register("endTime")}
+                  {...register('endTime')}
                   placeholder="hh:mm"
                 />
               </div>
@@ -426,7 +426,7 @@ export default function CreateEventPage() {
                     value={field.value}
                     onValueChange={(val) => {
                       field.onChange(val);
-                      setValue("city", "");
+                      setValue('city', '');
                     }}
                   >
                     <SelectTrigger className="w-full">
@@ -455,7 +455,7 @@ export default function CreateEventPage() {
                     <SelectTrigger className="w-full">
                       <SelectValue
                         placeholder={
-                          selectedState ? "Select city" : "Select state first"
+                          selectedState ? 'Select city' : 'Select state first'
                         }
                       />
                     </SelectTrigger>
@@ -475,7 +475,7 @@ export default function CreateEventPage() {
               <Label className="text-sm">Venue Details</Label>
 
               <Input
-                {...register("venue")}
+                {...register('venue')}
                 placeholder="Venue link (Google Maps Link)"
                 type="url"
               />
@@ -484,7 +484,7 @@ export default function CreateEventPage() {
               )}
 
               <Input
-                {...register("address")}
+                {...register('address')}
                 placeholder="Full address / street / building (optional)"
               />
             </div>
@@ -494,7 +494,7 @@ export default function CreateEventPage() {
           <div className="space-y-2">
             <Label>Description</Label>
             <Textarea
-              {...register("description")}
+              {...register('description')}
               placeholder="Tell people about your event..."
               rows={4}
             />
@@ -513,22 +513,22 @@ export default function CreateEventPage() {
                 <input
                   type="radio"
                   value="free"
-                  {...register("ticketType")}
+                  {...register('ticketType')}
                   defaultChecked
-                />{" "}
+                />{' '}
                 Free
               </label>
               <label className="flex items-center gap-2">
-                <input type="radio" value="paid" {...register("ticketType")} />{" "}
+                <input type="radio" value="paid" {...register('ticketType')} />{' '}
                 Paid
               </label>
             </div>
 
-            {ticketType === "paid" && (
+            {ticketType === 'paid' && (
               <Input
                 type="number"
                 placeholder="Ticket price ₹"
-                {...register("ticketPrice", { valueAsNumber: true })}
+                {...register('ticketPrice', { valueAsNumber: true })}
               />
             )}
           </div>
@@ -538,7 +538,7 @@ export default function CreateEventPage() {
             <Label className="text-sm">Capacity</Label>
             <Input
               type="number"
-              {...register("capacity", { valueAsNumber: true })}
+              {...register('capacity', { valueAsNumber: true })}
               placeholder="Ex: 100"
             />
             {errors.capacity && (
@@ -557,7 +557,7 @@ export default function CreateEventPage() {
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Creating...
               </>
             ) : (
-              "Create Event"
+              'Create Event'
             )}
           </Button>
         </form>
@@ -569,7 +569,7 @@ export default function CreateEventPage() {
           isOpen={showImagePicker}
           onClose={() => setShowImagePicker(false)}
           onSelect={(url) => {
-            setValue("coverImage", url);
+            setValue('coverImage', url);
             setShowImagePicker(false);
           }}
         />

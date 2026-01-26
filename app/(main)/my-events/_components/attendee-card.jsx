@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { api } from "@/convex/_generated/api";
-import { useConvexMutation } from "@/hooks/use-convex-query";
-import { format } from "date-fns";
-import { CheckCircle, Circle, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { api } from '@/convex/_generated/api';
+import { useConvexMutation } from '@/hooks/use-convex-query';
+import { format } from 'date-fns';
+import { CheckCircle, Circle, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 // Attendee Card Component
 export function AttendeeCard({ registration }) {
@@ -16,12 +16,12 @@ export function AttendeeCard({ registration }) {
     try {
       const result = await checkInAttendee({ qrCode: registration.qrCode });
       if (result.success) {
-        toast.success("Attendee checked in successfully");
+        toast.success('Attendee checked in successfully');
       } else {
         toast.error(result.message);
       }
     } catch (error) {
-      toast.error(error.message || "Failed to check in attendee");
+      toast.error(error.message || 'Failed to check in attendee');
     }
   };
 
@@ -30,7 +30,7 @@ export function AttendeeCard({ registration }) {
       <CardContent className="p-4 flex items-start gap-4">
         <div
           className={`mt-1 p-2 rounded-full ${
-            registration.checkedIn ? "bg-green-100" : "bg-gray-100"
+            registration.checkedIn ? 'bg-green-100' : 'bg-gray-100'
           }`}
         >
           {registration.checkedIn ? (
@@ -47,10 +47,10 @@ export function AttendeeCard({ registration }) {
           </p>
           <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
             <span>
-              {registration.checkedIn ? "⏰ Checked in" : "📅 Registered"}{" "}
+              {registration.checkedIn ? '⏰ Checked in' : '📅 Registered'}{' '}
               {registration.checkedIn && registration.checkedInAt
-                ? format(registration.checkedInAt, "PPp")
-                : format(registration.registeredAt, "PPp")}
+                ? format(registration.checkedInAt, 'PPp')
+                : format(registration.registeredAt, 'PPp')}
             </span>
             <span className="font-mono">QR: {registration.qrCode}</span>
           </div>
