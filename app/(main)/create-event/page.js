@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/select";
 
 import UnsplashImagePicker from "@/components/unsplash-image-picker";
-// import AIEventCreator from "./_components/ai-event-creator";
+import AIEventCreator from "./_components/ai-event-creator";
 import UpgradeModal from "@/components/upgrade-modal";
 import { CATEGORIES } from "@/lib/data";
 import Image from "next/image";

@@ -12,7 +12,6 @@ export default function EventCard({
   event,
   onClick,
   onDelete,
-  showActions = false,
   variant = "grid", // "grid" or "list"
   action = null, // "event" | "ticket" | null
   className = "",
@@ -130,7 +129,7 @@ export default function EventCard({
           </div>
         </div>
 
-        {showActions && (
+        {action && (
           <div className="flex gap-2 pt-2">
             {/* Primary button */}
             <Button
